@@ -1,0 +1,48 @@
+.citas-container {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra);
+  animation: fadeIn 0.4s;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-texto-claro);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #f0f7fa;
+  color: var(--color-texto);
+}
+
+.estado {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.estado-pendiente { background: #fff3cd; color: #856404; }
+.estado-confirmada { background: #d4edda; color: #155724; }
+.estado-cancelada { background: #f8d7da; color: #721c24; }
+.estado-atendida { background: #cce5ff; color: #004085; }
+
+.error { color: #d9534f; }

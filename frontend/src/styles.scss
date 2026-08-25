@@ -1,1 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
+/* Importar Google Fonts (opcional, se puede hacer en index.html) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Variables de color institucionales */
+:root {
+  --color-primario: #00A9E0;
+  --color-secundario: #FF6B6B;
+  --color-acento: #FFD166;
+  --color-fondo: #F5F7FA;
+  --color-texto: #333333;
+  --color-texto-claro: #666666;
+  --blanco: #FFFFFF;
+  --sombra: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --radio-borde: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+h1, h2, h3 {
+  color: var(--color-primario);
+  margin-bottom: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-primario);
+}
+
+/* Animación de entrada suave */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Utilidades */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}

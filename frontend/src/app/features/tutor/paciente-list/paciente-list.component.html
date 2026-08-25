@@ -1,0 +1,21 @@
+<div class="list-container">
+  <h2>Mis Pacientes</h2>
+
+  @if (error) { <p class="error">{{ error }}</p> }
+  @if (pacientes.length === 0 && !error) { <p>No hay pacientes registrados.</p> }
+
+  <table>
+    <thead>
+      <tr><th>Nombre</th><th>Fecha Nac.</th><th>Género</th></tr>
+    </thead>
+    <tbody>
+      @for (p of pacientes; track p.idPaciente) {
+        <tr>
+          <td>{{ p.nombre }} {{ p.apellido }}</td>
+          <td>{{ p.fechaNacimiento }}</td>
+          <td>{{ p.genero }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

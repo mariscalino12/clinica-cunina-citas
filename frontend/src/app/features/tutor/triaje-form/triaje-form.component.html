@@ -1,0 +1,37 @@
+<div class="triaje-container">
+  <h2>Triaje de Síntomas</h2>
+  <p class="intro">Seleccione el paciente y los síntomas para obtener una recomendación de especialidad.</p>
+
+  <div class="form-group">
+    <label>Paciente</label>
+    <select [(ngModel)]="pacienteSeleccionado" name="paciente">
+      <option [ngValue]="null">-- Seleccione --</option>
+      @for (p of pacientes; track p.idPaciente) {
+        <option [ngValue]="p.idPaciente">{{ p.nombre }} {{ p.apellido }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="sintomas">
+    <p class="subtitulo">Seleccione los síntomas:</p>
+    <div class="checkbox-grid">
+      @for (s of sintomasDisponibles; track s.id) {
+        <label class="checkbox-item">
+          <input type="checkbox" (change)="toggleSintoma(s.id)" />
+          <span>{{ s.nombre }}</span>
+        </label>
+      }
+    </div>
+  </div>
+
+  <button class="btn-primario" (click)="realizarTriaje()">Obtener recomendación</button>
+
+  @if (error) { <p class="error">{{ error }}</p> }
+
+  @if (resultado) {
+    <div class="resultado">
+      <h3>Especialidad recomendada:</h3>
+      <p class="especialidad">{{ resultado.especialidadRecomendada.nombre }}</p>
+    </div>
+  }
+</div>

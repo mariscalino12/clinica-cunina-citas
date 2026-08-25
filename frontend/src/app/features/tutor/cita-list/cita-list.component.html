@@ -1,0 +1,30 @@
+<div class="citas-container">
+  <h2>Mis Citas</h2>
+
+  @if (error) { <p class="error">{{ error }}</p> }
+  @if (citas.length === 0 && !error) {
+    <div class="empty-state">
+      <p>No hay citas registradas.</p>
+    </div>
+  }
+
+  @if (citas.length > 0) {
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr><th>Paciente</th><th>Fecha</th><th>Especialidad</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          @for (c of citas; track c.idCita) {
+            <tr>
+              <td>{{ c.paciente.nombre }} {{ c.paciente.apellido }}</td>
+              <td>{{ c.fechaHora | date:'medium' }}</td>
+              <td>{{ c.especialidad.nombre }}</td>
+              <td><span class="estado estado-{{ c.estado | lowercase }}">{{ c.estado }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

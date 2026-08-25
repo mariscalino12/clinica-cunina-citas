@@ -1,0 +1,27 @@
+.list-container, .citas-container {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radio-borde);
+  box-shadow: var(--sombra);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background-color: #f0f7fa;
+  color: var(--color-texto);
+}
+
+tr:hover td {
+  background-color: #f9f9f9;
+}
