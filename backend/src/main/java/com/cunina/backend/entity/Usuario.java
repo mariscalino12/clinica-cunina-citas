@@ -12,6 +12,9 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Long idUsuario;
 
+    @Column(length = 20, unique = true)
+    private String dni;
+
     private String nombre;
     private String apellido;
 
@@ -36,23 +39,12 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Long idUsuario, String nombre, String apellido, String email,
-                   String passwordHash, String rol, String telefono,
-                   String direccion, LocalDateTime fechaRegistro) {
-        this.idUsuario = idUsuario;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.rol = rol;
-        this.telefono = telefono;
-        this.direccion = direccion;
-        this.fechaRegistro = fechaRegistro;
-    }
-
     // Getters y Setters
     public Long getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+
+    public String getDni() { return dni; }
+    public void setDni(String dni) { this.dni = dni; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

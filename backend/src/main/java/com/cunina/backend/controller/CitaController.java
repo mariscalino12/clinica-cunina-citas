@@ -1,7 +1,9 @@
 package com.cunina.backend.controller;
 
+import com.cunina.backend.dto.ReservaCitaRequestDTO;
 import com.cunina.backend.entity.Cita;
 import com.cunina.backend.service.CitaService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +23,9 @@ public class CitaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> reservar(@RequestBody ReservaCitaRequest request) {
+    public ResponseEntity<?> reservar(@Valid @RequestBody ReservaCitaRequestDTO dto) {
         try {
-            Cita cita = citaService.reservarCita(
-                    request.getPacienteId(),
-                    request.getMedicoId(),
-                    request.getEspecialidadId(),
-                    request.getTriajeId(),
-                    request.getFechaHora()
-            );
+            Cita cita = citaService.reservarCita(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(cita);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,25 +43,5 @@ public class CitaController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fin) {
         return ResponseEntity.ok(citaService.listarPorMedico(medicoId, inicio, fin));
-    }
-
-    // DTO interno
-    static class ReservaCitaRequest {
-        private Long pacienteId;
-        private Long medicoId;
-        private Long especialidadId;
-        private Long triajeId;
-        private LocalDateTime fechaHora;
-        // Getters y setters
-        public Long getPacienteId() { return pacienteId; }
-        public void setPacienteId(Long pacienteId) { this.pacienteId = pacienteId; }
-        public Long getMedicoId() { return medicoId; }
-        public void setMedicoId(Long medicoId) { this.medicoId = medicoId; }
-        public Long getEspecialidadId() { return especialidadId; }
-        public void setEspecialidadId(Long especialidadId) { this.especialidadId = especialidadId; }
-        public Long getTriajeId() { return triajeId; }
-        public void setTriajeId(Long triajeId) { this.triajeId = triajeId; }
-        public LocalDateTime getFechaHora() { return fechaHora; }
-        public void setFechaHora(LocalDateTime fechaHora) { this.fechaHora = fechaHora; }
     }
 }

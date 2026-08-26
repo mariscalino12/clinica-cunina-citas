@@ -1,5 +1,6 @@
 package com.cunina.backend.service;
 
+import com.cunina.backend.dto.RegistroTutorDTO;
 import com.cunina.backend.entity.Usuario;
 import com.cunina.backend.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,13 +20,25 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Usuario registrarTutor(Usuario usuario) {
-        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+    public Usuario registrarTutor(RegistroTutorDTO dto) {
+        if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("El email ya está registrado");
         }
-        usuario.setPasswordHash(passwordEncoder.encode(usuario.getPasswordHash()));
+        if (dto.getDni() != null && usuarioRepository.existsByDni(dto.getDni())) {
+            throw new RuntimeException("El DNI ya está registrado");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setNombre(dto.getNombre());
+        usuario.setApellido(dto.getApellido());
+        usuario.setEmail(dto.getEmail());
+        usuario.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol("TUTOR");
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setDireccion(dto.getDireccion());
+        usuario.setDni(dto.getDni());
         usuario.setFechaRegistro(LocalDateTime.now());
+
         return usuarioRepository.save(usuario);
     }
 
@@ -36,4 +49,12 @@ public class UsuarioService {
     public Usuario guardar(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
+    public Usuario autenticar(String email, String rawPassword) {
+    Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+    if (!passwordEncoder.matches(rawPassword, usuario.getPasswordHash())) {
+        throw new RuntimeException("Credenciales inválidas");
+    }
+    return usuario;
+}
 }

@@ -1,7 +1,9 @@
 package com.cunina.backend.controller;
 
+import com.cunina.backend.dto.RegistroPacienteDTO;
 import com.cunina.backend.entity.Paciente;
 import com.cunina.backend.service.PacienteService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,10 @@ public class PacienteController {
     }
 
     @PostMapping("/tutor/{tutorId}")
-    public ResponseEntity<?> registrar(@PathVariable Long tutorId, @RequestBody Paciente paciente) {
+    public ResponseEntity<?> registrar(@PathVariable Long tutorId,
+                                       @Valid @RequestBody RegistroPacienteDTO dto) {
         try {
-            Paciente nuevo = pacienteService.registrarPaciente(paciente, tutorId);
+            Paciente nuevo = pacienteService.registrarPaciente(dto, tutorId);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

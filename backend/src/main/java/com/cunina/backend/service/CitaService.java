@@ -1,10 +1,14 @@
 package com.cunina.backend.service;
 
+import com.cunina.backend.dto.ReservaCitaRequestDTO;
 import com.cunina.backend.entity.*;
 import com.cunina.backend.repository.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -16,63 +20,95 @@ public class CitaService {
     private final EspecialidadRepository especialidadRepository;
     private final TarifaRepository tarifaRepository;
     private final TriajeRepository triajeRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final HorarioMedicoRepository horarioMedicoRepository; // Nuevo
 
     public CitaService(CitaRepository citaRepository,
                        PacienteRepository pacienteRepository,
                        MedicoRepository medicoRepository,
                        EspecialidadRepository especialidadRepository,
                        TarifaRepository tarifaRepository,
-                       TriajeRepository triajeRepository) {
+                       TriajeRepository triajeRepository,
+                       UsuarioRepository usuarioRepository,
+                       HorarioMedicoRepository horarioMedicoRepository) { // Nuevo parámetro
         this.citaRepository = citaRepository;
         this.pacienteRepository = pacienteRepository;
         this.medicoRepository = medicoRepository;
         this.especialidadRepository = especialidadRepository;
         this.tarifaRepository = tarifaRepository;
         this.triajeRepository = triajeRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.horarioMedicoRepository = horarioMedicoRepository;
     }
 
-    public Cita reservarCita(Long pacienteId, Long medicoId, Long especialidadId,
-                             Long triajeId, LocalDateTime fechaHora) {
-        Paciente paciente = pacienteRepository.findById(pacienteId)
+    public Cita reservarCita(ReservaCitaRequestDTO dto) {
+        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
-        Medico medico = medicoRepository.findById(medicoId)
+        Medico medico = medicoRepository.findById(dto.getMedicoId())
                 .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
-        Especialidad especialidad = especialidadRepository.findById(especialidadId)
+        Especialidad especialidad = especialidadRepository.findById(dto.getEspecialidadId())
                 .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
 
-        // Verificar que la fecha sea futura
-        if (fechaHora.isBefore(LocalDateTime.now())) {
+        // Validación: paciente pertenece al tutor autenticado
+        if (!paciente.getTutor().getIdUsuario().equals(obtenerTutorIdAutenticado())) {
+            throw new RuntimeException("No tiene permiso para reservar cita para este paciente");
+        }
+
+        // Validación: médico pertenece a la especialidad seleccionada
+        if (!medico.getEspecialidad().getIdEspecialidad().equals(especialidad.getIdEspecialidad())) {
+            throw new RuntimeException("El médico no pertenece a la especialidad seleccionada");
+        }
+
+        if (!medico.getActivo()) {
+            throw new RuntimeException("El médico no está activo");
+        }
+
+        if (dto.getFechaHora().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("La fecha de la cita debe ser futura");
         }
 
-        // Verificar disponibilidad: que no exista otra cita para el médico en ese horario
-        List<Cita> citasMedico = citaRepository.findByMedico_IdMedicoAndFechaHoraBetween(
-                medicoId, fechaHora.minusMinutes(30), fechaHora.plusMinutes(30));
-        if (!citasMedico.isEmpty()) {
-            throw new RuntimeException("El médico no está disponible en ese horario");
+        // Validación de horario laboral del médico
+        Integer diaSemana = dto.getFechaHora().getDayOfWeek().getValue(); // 1=Lunes..7=Domingo
+        List<HorarioMedico> horarios = horarioMedicoRepository
+                .findByMedico_IdMedicoAndDiaSemana(medico.getIdMedico(), diaSemana);
+
+        boolean dentroHorario = horarios.stream().anyMatch(h -> {
+            LocalTime horaCita = dto.getFechaHora().toLocalTime();
+            return !horaCita.isBefore(h.getHoraInicio()) && !horaCita.isAfter(h.getHoraFin());
+        });
+
+        if (!dentroHorario) {
+            throw new RuntimeException("El médico no atiende en ese horario");
         }
 
-        // Crear la cita
+        // Verificar solapamiento con citas existentes para el médico
+        LocalDateTime inicio = dto.getFechaHora().minusMinutes(30);
+        LocalDateTime fin = dto.getFechaHora().plusMinutes(30);
+        List<Cita> citasMedico = citaRepository.findByMedico_IdMedicoAndFechaHoraBetween(
+                medico.getIdMedico(), inicio, fin);
+        for (Cita c : citasMedico) {
+            if (!c.getEstado().equals("CANCELADA")) {
+                throw new RuntimeException("El médico no está disponible en ese horario");
+            }
+        }
+
         Cita cita = new Cita();
         cita.setPaciente(paciente);
         cita.setMedico(medico);
         cita.setEspecialidad(especialidad);
-        cita.setFechaHora(fechaHora);
+        cita.setFechaHora(dto.getFechaHora());
         cita.setEstado("PENDIENTE");
         cita.setTipoConsulta("PRESENCIAL");
         cita.setEstadoPago("PENDIENTE");
         cita.setFechaCreacion(LocalDateTime.now());
 
-        // Asociar tarifa según especialidad
-        tarifaRepository.findByEspecialidad_IdEspecialidad(especialidadId)
+        tarifaRepository.findByEspecialidad_IdEspecialidad(especialidad.getIdEspecialidad())
                 .ifPresent(cita::setTarifa);
 
-        // Asociar triaje si se proporciona
-        if (triajeId != null) {
-            Triaje triaje = triajeRepository.findById(triajeId)
+        if (dto.getTriajeId() != null) {
+            Triaje triaje = triajeRepository.findById(dto.getTriajeId())
                     .orElseThrow(() -> new RuntimeException("Triaje no encontrado"));
             cita.setTriaje(triaje);
-            cita.setSintomasDescripcion("Triaje realizado");
         }
 
         return citaRepository.save(cita);
@@ -84,5 +120,16 @@ public class CitaService {
 
     public List<Cita> listarPorMedico(Long medicoId, LocalDateTime inicio, LocalDateTime fin) {
         return citaRepository.findByMedico_IdMedicoAndFechaHoraBetween(medicoId, inicio, fin);
+    }
+
+    private Long obtenerTutorIdAutenticado() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            String email = auth.getName();
+            Usuario usuario = usuarioRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("No autenticado"));
+            return usuario.getIdUsuario();
+        }
+        throw new RuntimeException("No autenticado");
     }
 }

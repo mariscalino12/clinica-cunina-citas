@@ -1,13 +1,15 @@
 package com.cunina.backend.service;
 
+import com.cunina.backend.dto.TriajeRequestDTO;
 import com.cunina.backend.entity.*;
 import com.cunina.backend.repository.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
 
 @Service
 public class TriajeService {
@@ -18,39 +20,48 @@ public class TriajeService {
     private final SintomaRepository sintomaRepository;
     private final PacienteRepository pacienteRepository;
     private final EspecialidadRepository especialidadRepository;
+    private final UsuarioRepository usuarioRepository; // Añadido
 
     public TriajeService(TriajeRepository triajeRepository,
                          TriajeSintomaRepository triajeSintomaRepository,
                          EspecialidadSintomaRepository especialidadSintomaRepository,
                          SintomaRepository sintomaRepository,
                          PacienteRepository pacienteRepository,
-                         EspecialidadRepository especialidadRepository) {
+                         EspecialidadRepository especialidadRepository,
+                         UsuarioRepository usuarioRepository) {
         this.triajeRepository = triajeRepository;
         this.triajeSintomaRepository = triajeSintomaRepository;
         this.especialidadSintomaRepository = especialidadSintomaRepository;
         this.sintomaRepository = sintomaRepository;
         this.pacienteRepository = pacienteRepository;
         this.especialidadRepository = especialidadRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
-    public Triaje realizarTriaje(Long pacienteId, List<Long> sintomaIds, String notas) {
-        Paciente paciente = pacienteRepository.findById(pacienteId)
+    public Triaje realizarTriaje(TriajeRequestDTO dto) {
+        if (dto.getSintomaIds() == null || dto.getSintomaIds().isEmpty()) {
+            throw new RuntimeException("Debe seleccionar al menos un síntoma");
+        }
+
+        Paciente paciente = pacienteRepository.findById(dto.getPacienteId())
                 .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
 
-        // Calcular especialidad recomendada
-        Especialidad especialidadRecomendada = recomendarEspecialidad(sintomaIds);
+        // Validación de que el paciente pertenece al tutor autenticado
+        if (!paciente.getTutor().getIdUsuario().equals(obtenerTutorIdAutenticado())) {
+            throw new RuntimeException("No tiene permiso para realizar triaje sobre este paciente");
+        }
 
-        // Crear triaje
+        Especialidad especialidadRecomendada = recomendarEspecialidad(dto.getSintomaIds());
+
         Triaje triaje = new Triaje();
         triaje.setPaciente(paciente);
         triaje.setFechaEvaluacion(LocalDateTime.now());
         triaje.setEspecialidadRecomendada(especialidadRecomendada);
-        triaje.setNotas(notas);
+        triaje.setNotas(dto.getNotas());
         triaje = triajeRepository.save(triaje);
 
-        // Guardar síntomas seleccionados
-        for (Long sintomaId : sintomaIds) {
+        for (Long sintomaId : dto.getSintomaIds()) {
             Sintoma sintoma = sintomaRepository.findById(sintomaId)
                     .orElseThrow(() -> new RuntimeException("Síntoma no encontrado"));
             TriajeSintoma ts = new TriajeSintoma();
@@ -67,19 +78,16 @@ public class TriajeService {
                 .findBySintoma_IdSintomaIn(sintomaIds);
 
         if (relaciones.isEmpty()) {
-            // Si no hay coincidencias, recomendar Pediatría General (id=1)
             return especialidadRepository.findById(1L)
                     .orElseThrow(() -> new RuntimeException("Especialidad por defecto no encontrada"));
         }
 
-        // Sumar pesos por especialidad
         Map<Long, Integer> puntajes = new HashMap<>();
         for (EspecialidadSintoma rel : relaciones) {
             Long espId = rel.getEspecialidad().getIdEspecialidad();
             puntajes.merge(espId, rel.getPeso(), Integer::sum);
         }
 
-        // Obtener la especialidad con mayor puntaje
         Long especialidadId = puntajes.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .get()
@@ -91,5 +99,16 @@ public class TriajeService {
 
     public List<Triaje> listarPorPaciente(Long pacienteId) {
         return triajeRepository.findByPaciente_IdPaciente(pacienteId);
+    }
+
+    private Long obtenerTutorIdAutenticado() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            String email = auth.getName();
+            Usuario usuario = usuarioRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("No autenticado"));
+            return usuario.getIdUsuario();
+        }
+        throw new RuntimeException("No autenticado");
     }
 }

@@ -16,6 +16,9 @@ public class Paciente {
     @JoinColumn(name = "tutor_id", nullable = false)
     private Usuario tutor;
 
+    @Column(length = 20, unique = true)
+    private String dni;
+
     @Column(nullable = false, length = 100)
     private String nombre;
 
@@ -43,6 +46,9 @@ public class Paciente {
 
     public Usuario getTutor() { return tutor; }
     public void setTutor(Usuario tutor) { this.tutor = tutor; }
+
+    public String getDni() { return dni; }
+    public void setDni(String dni) { this.dni = dni; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

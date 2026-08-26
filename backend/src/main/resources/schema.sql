@@ -1,12 +1,28 @@
-CREATE DATABASE clinica_cunina;
-GO
+-- Eliminar tablas en orden correcto (primero las que dependen de otras)
+DROP TABLE IF EXISTS notificaciones;
+DROP TABLE IF EXISTS historial_medico;
+DROP TABLE IF EXISTS receta_medicamentos;
+DROP TABLE IF EXISTS recetas;
+DROP TABLE IF EXISTS pagos;
+DROP TABLE IF EXISTS citas;
+DROP TABLE IF EXISTS triaje_sintomas;
+DROP TABLE IF EXISTS triajes;
+DROP TABLE IF EXISTS horarios_medico;
+DROP TABLE IF EXISTS especialidad_sintoma;
+DROP TABLE IF EXISTS medicos;
+DROP TABLE IF EXISTS tarifas;
+DROP TABLE IF EXISTS consultorios;
+DROP TABLE IF EXISTS sintomas;
+DROP TABLE IF EXISTS especialidades;
+DROP TABLE IF EXISTS pacientes;
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS medicamentos;
+DROP TABLE IF EXISTS metodos_pago;
 
-USE clinica_cunina;
-GO
-
--- Tabla usuarios
+-- Crear tablas en orden correcto (primero las independientes)
 CREATE TABLE usuarios (
     id_usuario BIGINT IDENTITY(1,1) PRIMARY KEY,
+    dni NVARCHAR(20) UNIQUE,
     nombre NVARCHAR(100) NOT NULL,
     apellido NVARCHAR(100) NOT NULL,
     email NVARCHAR(150) NOT NULL UNIQUE,
@@ -17,10 +33,17 @@ CREATE TABLE usuarios (
     fecha_registro DATETIME DEFAULT GETDATE()
 );
 
--- Tabla pacientes
+CREATE TABLE especialidades (
+    id_especialidad BIGINT IDENTITY(1,1) PRIMARY KEY,
+    nombre NVARCHAR(100) NOT NULL,
+    descripcion NVARCHAR(MAX),
+    imagen_url NVARCHAR(500)
+);
+
 CREATE TABLE pacientes (
     id_paciente BIGINT IDENTITY(1,1) PRIMARY KEY,
     tutor_id BIGINT NOT NULL,
+    dni NVARCHAR(20) UNIQUE,
     nombre NVARCHAR(100) NOT NULL,
     apellido NVARCHAR(100) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
@@ -30,15 +53,14 @@ CREATE TABLE pacientes (
     FOREIGN KEY (tutor_id) REFERENCES usuarios(id_usuario)
 );
 
--- Tabla especialidades
-CREATE TABLE especialidades (
-    id_especialidad BIGINT IDENTITY(1,1) PRIMARY KEY,
-    nombre NVARCHAR(100) NOT NULL,
-    descripcion NVARCHAR(MAX),
-    imagen_url NVARCHAR(500)
+CREATE TABLE tarifas (
+    id_tarifa BIGINT IDENTITY(1,1) PRIMARY KEY,
+    especialidad_id BIGINT NOT NULL,
+    monto DECIMAL(10,2) NOT NULL,
+    descripcion NVARCHAR(200),
+    FOREIGN KEY (especialidad_id) REFERENCES especialidades(id_especialidad)
 );
 
--- Tabla medicos
 CREATE TABLE medicos (
     id_medico BIGINT IDENTITY(1,1) PRIMARY KEY,
     usuario_id BIGINT NOT NULL UNIQUE,
@@ -49,21 +71,18 @@ CREATE TABLE medicos (
     FOREIGN KEY (especialidad_id) REFERENCES especialidades(id_especialidad)
 );
 
--- Tabla consultorios
 CREATE TABLE consultorios (
     id_consultorio BIGINT IDENTITY(1,1) PRIMARY KEY,
     nombre NVARCHAR(100) NOT NULL,
     ubicacion NVARCHAR(200)
 );
 
--- Tabla sintomas
 CREATE TABLE sintomas (
     id_sintoma BIGINT IDENTITY(1,1) PRIMARY KEY,
     nombre NVARCHAR(100) NOT NULL,
     descripcion NVARCHAR(MAX)
 );
 
--- Tabla especialidad_sintoma
 CREATE TABLE especialidad_sintoma (
     id_relacion BIGINT IDENTITY(1,1) PRIMARY KEY,
     especialidad_id BIGINT NOT NULL,
@@ -74,7 +93,6 @@ CREATE TABLE especialidad_sintoma (
     CONSTRAINT UQ_especialidad_sintoma UNIQUE (especialidad_id, sintoma_id)
 );
 
--- Tabla horarios_medico
 CREATE TABLE horarios_medico (
     id_horario BIGINT IDENTITY(1,1) PRIMARY KEY,
     medico_id BIGINT NOT NULL,
@@ -86,7 +104,6 @@ CREATE TABLE horarios_medico (
     FOREIGN KEY (consultorio_id) REFERENCES consultorios(id_consultorio)
 );
 
--- Tabla triajes
 CREATE TABLE triajes (
     id_triaje BIGINT IDENTITY(1,1) PRIMARY KEY,
     paciente_id BIGINT NOT NULL,
@@ -97,7 +114,6 @@ CREATE TABLE triajes (
     FOREIGN KEY (especialidad_recomendada_id) REFERENCES especialidades(id_especialidad)
 );
 
--- Tabla triaje_sintomas
 CREATE TABLE triaje_sintomas (
     id_triaje_sintoma BIGINT IDENTITY(1,1) PRIMARY KEY,
     triaje_id BIGINT NOT NULL,
@@ -107,23 +123,6 @@ CREATE TABLE triaje_sintomas (
     CONSTRAINT UQ_triaje_sintoma UNIQUE (triaje_id, sintoma_id)
 );
 
--- Tabla tarifas
-CREATE TABLE tarifas (
-    id_tarifa BIGINT IDENTITY(1,1) PRIMARY KEY,
-    especialidad_id BIGINT NOT NULL,
-    monto DECIMAL(10,2) NOT NULL,
-    descripcion NVARCHAR(200),
-    FOREIGN KEY (especialidad_id) REFERENCES especialidades(id_especialidad)
-);
-
--- Tabla metodos_pago
-CREATE TABLE metodos_pago (
-    id_metodo_pago BIGINT IDENTITY(1,1) PRIMARY KEY,
-    nombre NVARCHAR(50) NOT NULL,
-    descripcion NVARCHAR(200)
-);
-
--- Tabla citas
 CREATE TABLE citas (
     id_cita BIGINT IDENTITY(1,1) PRIMARY KEY,
     paciente_id BIGINT NOT NULL,
@@ -146,7 +145,12 @@ CREATE TABLE citas (
     FOREIGN KEY (tarifa_id) REFERENCES tarifas(id_tarifa)
 );
 
--- Tabla pagos
+CREATE TABLE metodos_pago (
+    id_metodo_pago BIGINT IDENTITY(1,1) PRIMARY KEY,
+    nombre NVARCHAR(50) NOT NULL,
+    descripcion NVARCHAR(200)
+);
+
 CREATE TABLE pagos (
     id_pago BIGINT IDENTITY(1,1) PRIMARY KEY,
     cita_id BIGINT NOT NULL,
@@ -159,7 +163,6 @@ CREATE TABLE pagos (
     FOREIGN KEY (metodo_pago_id) REFERENCES metodos_pago(id_metodo_pago)
 );
 
--- Tabla medicamentos
 CREATE TABLE medicamentos (
     id_medicamento BIGINT IDENTITY(1,1) PRIMARY KEY,
     nombre NVARCHAR(150) NOT NULL,
@@ -169,7 +172,6 @@ CREATE TABLE medicamentos (
     precio_unitario DECIMAL(10,2)
 );
 
--- Tabla recetas
 CREATE TABLE recetas (
     id_receta BIGINT IDENTITY(1,1) PRIMARY KEY,
     cita_id BIGINT NOT NULL,
@@ -183,7 +185,6 @@ CREATE TABLE recetas (
     FOREIGN KEY (medico_id) REFERENCES medicos(id_medico)
 );
 
--- Tabla receta_medicamentos
 CREATE TABLE receta_medicamentos (
     id_detalle BIGINT IDENTITY(1,1) PRIMARY KEY,
     receta_id BIGINT NOT NULL,
@@ -196,7 +197,6 @@ CREATE TABLE receta_medicamentos (
     FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id_medicamento)
 );
 
--- Tabla historial_medico
 CREATE TABLE historial_medico (
     id_historial BIGINT IDENTITY(1,1) PRIMARY KEY,
     paciente_id BIGINT NOT NULL,
@@ -211,7 +211,6 @@ CREATE TABLE historial_medico (
     FOREIGN KEY (receta_id) REFERENCES recetas(id_receta)
 );
 
--- Tabla notificaciones
 CREATE TABLE notificaciones (
     id_notificacion BIGINT IDENTITY(1,1) PRIMARY KEY,
     usuario_id BIGINT NOT NULL,
@@ -232,45 +231,3 @@ CREATE INDEX idx_pagos_cita ON pagos(cita_id);
 CREATE INDEX idx_recetas_cita ON recetas(cita_id);
 CREATE INDEX idx_receta_medicamentos_receta ON receta_medicamentos(receta_id);
 CREATE INDEX idx_historial_paciente ON historial_medico(paciente_id);
-
--- Datos iniciales
-INSERT INTO especialidades (nombre, descripcion) VALUES
-(N'Pediatría General', N'Atención integral del niño sano y enfermo'),
-(N'Neumología Pediátrica', N'Enfermedades respiratorias del niño'),
-(N'Dermatología Pediátrica', N'Enfermedades de la piel en niños'),
-(N'Gastroenterología Pediátrica', N'Enfermedades digestivas del niño'),
-(N'Neurología Pediátrica', N'Trastornos neurológicos infantiles'),
-(N'Otorrinolaringología Pediátrica', N'Problemas de oído, nariz y garganta');
-
-INSERT INTO sintomas (nombre, descripcion) VALUES
-(N'Fiebre alta persistente', N'Temperatura mayor a 38°C por más de 3 días'),
-(N'Tos seca o con flema', N'Tos que dura más de una semana'),
-(N'Dolor de oído', N'Dolor intenso en el oído, posible infección'),
-(N'Erupción cutánea', N'Sarpullido o manchas en la piel'),
-(N'Dificultad para respirar', N'Respiración rápida o con silbidos'),
-(N'Dolor abdominal', N'Dolor en el abdomen, cólicos'),
-(N'Convulsiones', N'Episodios de movimientos involuntarios'),
-(N'Vómitos persistentes', N'Vómitos frecuentes que impiden la hidratación');
-
-INSERT INTO especialidad_sintoma (especialidad_id, sintoma_id, peso) VALUES
-(1,1,5), (1,2,3), (1,6,3), (1,8,4),
-(2,2,5), (2,5,5), (2,1,2),
-(3,4,5), (3,1,2),
-(4,6,5), (4,8,4), (4,1,2),
-(5,7,5), (5,1,3),
-(6,3,5), (6,1,2), (6,2,2);
-
-INSERT INTO consultorios (nombre, ubicacion) VALUES
-(N'Consultorio 101', N'Primer piso, ala izquierda'),
-(N'Consultorio 102', N'Primer piso, ala derecha'),
-(N'Consultorio 201', N'Segundo piso, ala izquierda'),
-(N'Consultorio 202', N'Segundo piso, ala derecha');
-
-INSERT INTO metodos_pago (nombre, descripcion) VALUES
-(N'Efectivo', N'Pago en caja de la clínica'),
-(N'Tarjeta de crédito', N'Pago con tarjeta de crédito'),
-(N'Tarjeta de débito', N'Pago con tarjeta de débito'),
-(N'Transferencia', N'Transferencia bancaria'),
-(N'Pago en línea', N'Pago a través de pasarela de pagos');
-
-select * from usuarios;
