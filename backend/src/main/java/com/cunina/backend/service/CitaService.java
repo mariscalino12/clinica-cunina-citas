@@ -21,7 +21,7 @@ public class CitaService {
     private final TarifaRepository tarifaRepository;
     private final TriajeRepository triajeRepository;
     private final UsuarioRepository usuarioRepository;
-    private final HorarioMedicoRepository horarioMedicoRepository; // Nuevo
+    private final HorarioMedicoRepository horarioMedicoRepository;
 
     public CitaService(CitaRepository citaRepository,
                        PacienteRepository pacienteRepository,
@@ -30,7 +30,7 @@ public class CitaService {
                        TarifaRepository tarifaRepository,
                        TriajeRepository triajeRepository,
                        UsuarioRepository usuarioRepository,
-                       HorarioMedicoRepository horarioMedicoRepository) { // Nuevo parámetro
+                       HorarioMedicoRepository horarioMedicoRepository) { 
         this.citaRepository = citaRepository;
         this.pacienteRepository = pacienteRepository;
         this.medicoRepository = medicoRepository;

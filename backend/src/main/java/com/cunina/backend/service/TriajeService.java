@@ -20,7 +20,7 @@ public class TriajeService {
     private final SintomaRepository sintomaRepository;
     private final PacienteRepository pacienteRepository;
     private final EspecialidadRepository especialidadRepository;
-    private final UsuarioRepository usuarioRepository; // Añadido
+    private final UsuarioRepository usuarioRepository; 
 
     public TriajeService(TriajeRepository triajeRepository,
                          TriajeSintomaRepository triajeSintomaRepository,

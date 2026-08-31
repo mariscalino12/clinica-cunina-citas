@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './features/auth/login/login.component';
-import { RegisterComponent } from './features/auth/register/register.component';
+import { AuthPageComponent } from './features/auth/auth-page/auth-page.component';
 import { TutorDashboardComponent } from './features/tutor/dashboard/dashboard.component';
 import { MedicoDashboardComponent } from './features/medico/dashboard/dashboard.component';
 import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.component';
@@ -13,8 +12,8 @@ import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'registro', component: RegisterComponent },
+  { path: 'login', component: AuthPageComponent },
+{ path: 'registro', component: AuthPageComponent },
   {
     path: 'tutor',
     component: TutorDashboardComponent,

@@ -34,9 +34,10 @@ export class AuthService {
             apellido: res.apellido,
             email: res.email,
             rol: res.rol,
-            token: res.token || 'token-temporal'
+            token: res.token
           };
           localStorage.setItem('usuario', JSON.stringify(usuario));
+          localStorage.setItem('token', res.token);
           this.usuarioActual.set(usuario);
         })
       );
@@ -48,6 +49,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('usuario');
+    localStorage.removeItem('token');
     this.usuarioActual.set(null);
     this.router.navigate(['/login']);
   }

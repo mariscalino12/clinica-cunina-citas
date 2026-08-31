@@ -1,32 +1,84 @@
 <div class="register-container">
   <div class="register-card">
     <h2>Registro de Tutor</h2>
-    <form (ngSubmit)="onRegister()">
-      <div class="form-group">
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
+      <div class="form-group" [class.invalid]="nombre?.invalid && (nombre?.touched || erroresBackend['nombre'])">
         <label>Nombre</label>
-        <input [(ngModel)]="nombre" name="nombre" required />
+        <input type="text" formControlName="nombre" placeholder="Ingrese su nombre" />
+        @if (nombre?.invalid && nombre?.touched) {
+          <span class="error-icon">⚠️</span>
+        }
+        @if (nombre?.invalid && (nombre?.touched || erroresBackend['nombre'])) {
+          <small class="error-text">
+            {{ erroresBackend['nombre'] || (nombre?.errors?.['required'] ? 'El nombre es obligatorio' : 'Mínimo 2 caracteres') }}
+          </small>
+        }
       </div>
-      <div class="form-group">
+
+      <div class="form-group" [class.invalid]="apellido?.invalid && (apellido?.touched || erroresBackend['apellido'])">
         <label>Apellido</label>
-        <input [(ngModel)]="apellido" name="apellido" required />
+        <input type="text" formControlName="apellido" placeholder="Ingrese su apellido" />
+        @if (apellido?.invalid && apellido?.touched) {
+          <span class="error-icon">⚠️</span>
+        }
+        @if (apellido?.invalid && (apellido?.touched || erroresBackend['apellido'])) {
+          <small class="error-text">
+            {{ erroresBackend['apellido'] || (apellido?.errors?.['required'] ? 'El apellido es obligatorio' : 'Mínimo 2 caracteres') }}
+          </small>
+        }
       </div>
-      <div class="form-group">
+
+      <div class="form-group" [class.invalid]="email?.invalid && (email?.touched || erroresBackend['email'])">
         <label>Correo electrónico</label>
-        <input type="email" [(ngModel)]="email" name="email" required />
+        <input type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+        @if (email?.invalid && email?.touched) {
+          <span class="error-icon">⚠️</span>
+        }
+        @if (email?.invalid && (email?.touched || erroresBackend['email'])) {
+          <small class="error-text">
+            {{ erroresBackend['email'] || (email?.errors?.['required'] ? 'El email es obligatorio' : 'Formato de email inválido') }}
+          </small>
+        }
       </div>
-      <div class="form-group">
+
+      <div class="form-group" [class.invalid]="dni?.invalid && (dni?.touched || erroresBackend['dni'])">
+        <label>DNI</label>
+        <input type="text" formControlName="dni" placeholder="8 dígitos" />
+        @if (dni?.invalid && dni?.touched) {
+          <span class="error-icon">⚠️</span>
+        }
+        @if (dni?.invalid && (dni?.touched || erroresBackend['dni'])) {
+          <small class="error-text">
+            {{ erroresBackend['dni'] || (dni?.errors?.['required'] ? 'El DNI es obligatorio' : 'Debe tener exactamente 8 dígitos') }}
+          </small>
+        }
+      </div>
+
+      <div class="form-group" [class.invalid]="password?.invalid && (password?.touched || erroresBackend['password'])">
         <label>Contraseña</label>
-        <input type="password" [(ngModel)]="password" name="password" required />
+        <input type="password" formControlName="password" placeholder="Mínimo 8 caracteres, mayúscula, minúscula, número y símbolo" />
+        @if (password?.invalid && password?.touched) {
+          <span class="error-icon">⚠️</span>
+        }
+        @if (password?.invalid && (password?.touched || erroresBackend['password'])) {
+          <small class="error-text">
+            {{ erroresBackend['password'] || (password?.errors?.['required'] ? 'La contraseña es obligatoria' : 'Debe cumplir con los requisitos: mayúscula, minúscula, número y carácter especial') }}
+          </small>
+        }
       </div>
+
       <div class="form-group">
         <label>Teléfono</label>
-        <input [(ngModel)]="telefono" name="telefono" />
+        <input type="text" formControlName="telefono" placeholder="Opcional" />
       </div>
+
       <div class="form-group">
         <label>Dirección</label>
-        <input [(ngModel)]="direccion" name="direccion" />
+        <input type="text" formControlName="direccion" placeholder="Opcional" />
       </div>
-      <button type="submit">Registrarse</button>
+
+      <button type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+
       @if (mensaje) {
         <p class="mensaje">{{ mensaje }}</p>
       }
