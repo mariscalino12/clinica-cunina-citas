@@ -1,44 +1,50 @@
-<div class="cita-form">
-  <h2>Reservar Cita</h2>
-  <p class="intro">Complete los datos para agendar una nueva cita.</p>
+<div class="cita-form-container">
+  <header class="section-header">
+    <h2><i class="fas fa-plus-circle"></i> Reservar Cita</h2>
+    <p class="section-subtitle">Selecciona paciente, especialidad y médico</p>
+  </header>
 
-  <div class="form-group">
-    <label>Paciente</label>
-    <select [(ngModel)]="pacienteId" name="pacienteId">
-      <option [ngValue]="null">-- Seleccione --</option>
-      @for (p of pacientes; track p.idPaciente) {
-        <option [ngValue]="p.idPaciente">{{ p.nombre }} {{ p.apellido }}</option>
-      }
-    </select>
-  </div>
+  <form (ngSubmit)="reservar()" class="modern-form">
+    <div class="form-group">
+      <label>Paciente</label>
+      <select [(ngModel)]="pacienteId" name="pacienteId" required>
+        <option [ngValue]="null">-- Seleccione --</option>
+        @for (p of pacientes; track p.idPaciente) {
+          <option [ngValue]="p.idPaciente">{{ p.nombre }} {{ p.apellido }}</option>
+        }
+      </select>
+    </div>
 
-  <div class="form-group">
-    <label>Especialidad</label>
-    <select [(ngModel)]="especialidadId" name="especialidadId" (change)="cargarMedicos()">
-      <option [ngValue]="null">-- Seleccione --</option>
-      @for (e of especialidades; track e.idEspecialidad) {
-        <option [ngValue]="e.idEspecialidad">{{ e.nombre }}</option>
-      }
-    </select>
-  </div>
+    <div class="form-group">
+      <label>Especialidad</label>
+      <select [(ngModel)]="especialidadId" name="especialidadId" (change)="cargarMedicos()" required>
+        <option [ngValue]="null">-- Seleccione --</option>
+        @for (e of especialidades; track e.idEspecialidad) {
+          <option [ngValue]="e.idEspecialidad">{{ e.nombre }}</option>
+        }
+      </select>
+    </div>
 
-  <div class="form-group">
-    <label>Médico</label>
-    <select [(ngModel)]="medicoId" name="medicoId">
-      <option [ngValue]="null">-- Seleccione --</option>
-      @for (m of medicos; track m.idMedico) {
-        <option [ngValue]="m.idMedico">Dr. {{ m.usuario?.nombre }} {{ m.usuario?.apellido }}</option>
-      }
-    </select>
-  </div>
+    <div class="form-group">
+      <label>Médico</label>
+      <select [(ngModel)]="medicoId" name="medicoId" required>
+        <option [ngValue]="null">-- Seleccione --</option>
+        @for (m of medicos; track m.idMedico) {
+          <option [ngValue]="m.idMedico">Dr. {{ m.usuario?.nombre }} {{ m.usuario?.apellido }}</option>
+        }
+      </select>
+    </div>
 
-  <div class="form-group">
-    <label>Fecha y hora</label>
-    <input type="datetime-local" [(ngModel)]="fechaHora" name="fechaHora" />
-  </div>
+    <div class="form-group">
+      <label>Fecha y hora</label>
+      <input type="datetime-local" [(ngModel)]="fechaHora" name="fechaHora" required />
+    </div>
 
-  <button class="btn-primario" (click)="reservar()">Reservar</button>
+    <button type="submit" class="submit-btn">
+      <i class="fas fa-calendar-check"></i> Confirmar Reserva
+    </button>
 
-  @if (error) { <p class="error">{{ error }}</p> }
-  @if (mensaje) { <p class="mensaje">{{ mensaje }}</p> }
+    @if (error) { <p class="mensaje-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</p> }
+    @if (mensaje) { <p class="mensaje-exito"><i class="fas fa-check-circle"></i> {{ mensaje }}</p> }
+  </form>
 </div>

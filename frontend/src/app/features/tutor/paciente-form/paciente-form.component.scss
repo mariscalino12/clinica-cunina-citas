@@ -1,52 +1,182 @@
-.form-container {
-  background: white;
-  padding: 2rem;
-  border-radius: var(--radio-borde);
-  box-shadow: var(--sombra);
-  max-width: 600px;
+$primary-cyan: #00c6ff;
+$primary-blue: #0072ff;
+$ayacucho-gold: #f59e0b;
+$glass-bg: rgba(12, 22, 38, 0.55);
+$glass-border: rgba(255, 255, 255, 0.18);
+$glass-blur: blur(28px);
+$text-light: #f8fafc;
+$font-main: 'Inter', 'Segoe UI', Roboto, sans-serif;
+
+.form-card-container {
+  padding: 1rem;
+  max-width: 700px;
   margin: 0 auto;
-  animation: fadeIn 0.4s;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+
+  h2 {
+    color: white;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    i { color: $primary-cyan; }
+  }
+
+  .section-subtitle {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
+}
+
+.image-upload-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.image-upload-label {
+  cursor: pointer;
+  position: relative;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.upload-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 2px dashed rgba(255,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  transition: all 0.3s ease;
+
+  i { font-size: 2rem; margin-bottom: 0.3rem; }
+  span { font-size: 0.8rem; }
+
+  &:hover {
+    background: rgba(0,198,255,0.1);
+    border-color: $primary-cyan;
+  }
+}
+
+.image-preview {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid $ayacucho-gold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .remove-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    &:hover { background: #ff6b6b; }
+  }
+}
+
+.modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
-}
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 
-label {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 500;
-  color: var(--color-texto-claro);
-}
+  label {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
 
-input, select, textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-  &:focus {
+  input, select, textarea {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.3);
+    color: white;
     outline: none;
-    border-color: var(--color-primario);
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: $ayacucho-gold;
+      background: rgba(0,0,0,0.45);
+      box-shadow: 0 0 14px rgba(245,158,11,0.3);
+    }
   }
 }
 
-button {
-  background-color: var(--color-primario);
-  color: white;
-  padding: 0.75rem 1.5rem;
+.submit-btn {
+  padding: 0.9rem;
+  border-radius: 12px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  background: linear-gradient(135deg, $primary-cyan, $primary-blue);
+  color: white;
   font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+
   &:hover {
-    background-color: darken(#00A9E0, 8%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,198,255,0.45);
   }
 }
 
-.mensaje {
-  margin-top: 1rem;
-  color: #28a745;
-  font-weight: 500;
+.mensaje-exito, .mensaje-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.mensaje-exito { color: #51cf66; background: rgba(81,207,102,0.1); }
+.mensaje-error { color: #ff6b6b; background: rgba(255,107,107,0.1); }
+
+@media (max-width: 600px) {
+  .form-row { flex-direction: column; }
 }

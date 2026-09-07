@@ -1,0 +1,313 @@
+<section class="inicio-page">
+
+  <div class="welcome-section">
+
+    <div class="welcome-content">
+
+      <div class="welcome-badge">
+        <i class="fas fa-sparkles"></i>
+        Bienvenido al portal familiar
+      </div>
+
+      <h1>
+        Hola,
+        <span>{{ nombreUsuario }}</span>
+      </h1>
+
+      <p>
+        Gestiona la atención médica de tus pequeños
+        de forma rápida, sencilla y segura.
+      </p>
+
+      <div class="welcome-actions">
+
+        <a
+          routerLink="/tutor/citas/nueva"
+          class="primary-action"
+        >
+          <i class="fas fa-calendar-plus"></i>
+          Reservar una cita
+          <i class="fas fa-arrow-right arrow-icon"></i>
+        </a>
+
+        <a
+          routerLink="/tutor/pacientes/nuevo"
+          class="secondary-action"
+        >
+          <i class="fas fa-user-plus"></i>
+          Registrar paciente
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="welcome-decoration">
+
+      <div class="circle circle-one"></div>
+      <div class="circle circle-two"></div>
+
+      <div class="doctor-container">
+
+        <div class="doctor-aura"></div>
+
+        <img
+          src="assets/images/doctor.png"
+          alt="Doctor CUNINA"
+          class="doctor-image"
+        >
+
+        <div class="doctor-bubble">
+          <i class="fas fa-heart"></i>
+          ¡Cuidamos lo que más amas!
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="section-heading">
+
+    <div>
+
+      <span class="section-kicker">
+        ACCESOS RÁPIDOS
+      </span>
+
+      <h2>
+        ¿Qué deseas hacer?
+      </h2>
+
+    </div>
+
+    <span class="section-description">
+      Todo lo que necesitas en un solo lugar
+    </span>
+
+  </div>
+
+  <div class="quick-grid">
+
+    <a
+      routerLink="/tutor/pacientes"
+      class="quick-card blue"
+    >
+
+      <div class="quick-card-top">
+
+        <div class="quick-icon">
+          <i class="fas fa-users"></i>
+        </div>
+
+        <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+      </div>
+
+      <div class="quick-card-content">
+
+        <h3>
+          Mis Pacientes
+        </h3>
+
+        <p>
+          Consulta y administra la información de tus pacientes.
+        </p>
+
+      </div>
+
+      <div class="quick-line"></div>
+
+      <span class="quick-link">
+        Ver pacientes
+        <i class="fas fa-arrow-right"></i>
+      </span>
+
+    </a>
+
+    <a
+      routerLink="/tutor/pacientes/nuevo"
+      class="quick-card cyan"
+    >
+
+      <div class="quick-card-top">
+
+        <div class="quick-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+
+        <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+      </div>
+
+      <div class="quick-card-content">
+
+        <h3>
+          Nuevo Paciente
+        </h3>
+
+        <p>
+          Registra a un niño para gestionar su atención médica.
+        </p>
+
+      </div>
+
+      <div class="quick-line"></div>
+
+      <span class="quick-link">
+        Registrar ahora
+        <i class="fas fa-arrow-right"></i>
+      </span>
+
+    </a>
+
+    <a
+      routerLink="/tutor/triaje"
+      class="quick-card rose"
+    >
+
+      <div class="quick-card-top">
+
+        <div class="quick-icon">
+          <i class="fas fa-heart-pulse"></i>
+        </div>
+
+        <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+      </div>
+
+      <div class="quick-card-content">
+
+        <h3>
+          Triaje
+        </h3>
+
+        <p>
+          Registra y consulta los datos de evaluación inicial.
+        </p>
+
+      </div>
+
+      <div class="quick-line"></div>
+
+      <span class="quick-link">
+        Ir a triaje
+        <i class="fas fa-arrow-right"></i>
+      </span>
+
+    </a>
+
+    <a
+      routerLink="/tutor/citas"
+      class="quick-card gold"
+    >
+
+      <div class="quick-card-top">
+
+        <div class="quick-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+
+        <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+      </div>
+
+      <div class="quick-card-content">
+
+        <h3>
+          Mis Citas
+        </h3>
+
+        <p>
+          Consulta tus citas médicas y revisa su estado.
+        </p>
+
+      </div>
+
+      <div class="quick-line"></div>
+
+      <span class="quick-link">
+        Consultar citas
+        <i class="fas fa-arrow-right"></i>
+      </span>
+
+    </a>
+
+  </div>
+
+  <div class="bottom-grid">
+
+    <div class="info-panel">
+
+      <div class="panel-header">
+
+        <div class="panel-icon">
+          <i class="fas fa-calendar-day"></i>
+        </div>
+
+        <div>
+          <span>
+            ATENCIÓN MÉDICA
+          </span>
+
+          <h3>
+            Reserva tu próxima cita
+          </h3>
+        </div>
+
+      </div>
+
+      <p>
+        Agenda la atención de tus pequeños
+        con nuestros especialistas de la
+        Clínica Pediátrica CUNINA.
+      </p>
+
+      <a
+        routerLink="/tutor/citas/nueva"
+        class="panel-button"
+      >
+        Reservar cita
+        <i class="fas fa-arrow-right"></i>
+      </a>
+
+    </div>
+
+    <div class="info-panel security-panel">
+
+      <div class="security-icon">
+        <i class="fas fa-shield-heart"></i>
+      </div>
+
+      <div class="security-info">
+
+        <span>
+          SEGURIDAD
+        </span>
+
+        <h3>
+          Tu información está protegida
+        </h3>
+
+      </div>
+
+      <p>
+        CUNINA protege los datos personales
+        y médicos utilizados dentro del
+        portal del tutor.
+      </p>
+
+      <div class="security-status">
+
+        <span class="security-dot"></span>
+
+        Sistema operativo
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

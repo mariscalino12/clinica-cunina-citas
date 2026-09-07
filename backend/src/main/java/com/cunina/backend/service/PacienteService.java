@@ -7,6 +7,8 @@ import com.cunina.backend.repository.PacienteRepository;
 import com.cunina.backend.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -24,6 +26,23 @@ public class PacienteService {
         Usuario tutor = usuarioRepository.findById(tutorId)
                 .orElseThrow(() -> new RuntimeException("Tutor no encontrado"));
 
+        // Validación de fecha de nacimiento y edad
+        LocalDate fechaNacimiento = dto.getFechaNacimiento();
+        LocalDate hoy = LocalDate.now();
+
+        if (fechaNacimiento == null) {
+            throw new RuntimeException("La fecha de nacimiento es obligatoria");
+        }
+        if (fechaNacimiento.isAfter(hoy)) {
+            throw new RuntimeException("La fecha de nacimiento no puede ser futura");
+        }
+
+        Period edad = Period.between(fechaNacimiento, hoy);
+        int anios = edad.getYears();
+        if (anios < 0 || anios > 15) {
+            throw new RuntimeException("La edad debe estar entre 0 y 15 años");
+        }
+
         // Validar duplicado por nombre, apellido y fecha de nacimiento para el mismo tutor
         boolean existe = pacienteRepository
                 .existsByTutor_IdUsuarioAndNombreIgnoreCaseAndApellidoIgnoreCaseAndFechaNacimiento(
@@ -33,8 +52,13 @@ public class PacienteService {
         }
 
         // Validar DNI único si se proporciona
-        if (dto.getDni() != null && pacienteRepository.existsByDni(dto.getDni())) {
-            throw new RuntimeException("El DNI ya está registrado");
+        if (dto.getDni() != null && !dto.getDni().isEmpty()) {
+            if (!dto.getDni().matches("\\d{8}")) {
+                throw new RuntimeException("El DNI debe tener exactamente 8 dígitos");
+            }
+            if (pacienteRepository.existsByDni(dto.getDni())) {
+                throw new RuntimeException("El DNI ya está registrado");
+            }
         }
 
         Paciente paciente = new Paciente();

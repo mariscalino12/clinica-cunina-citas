@@ -10,6 +10,7 @@ export interface Paciente {
   genero: string; // 'M' o 'F'
   grupoSanguineo?: string;
   alergias?: string;
+  dni?: string; // ← AÑADE ESTA LÍNEA
 }
 
 @Injectable({ providedIn: 'root' })

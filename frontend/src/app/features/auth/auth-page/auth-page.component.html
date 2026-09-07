@@ -1,116 +1,640 @@
 <div class="auth-page">
-  <!-- Fondo con imagen -->
-  <div class="background-image"></div>
-  <div class="overlay"></div>
+  @if (view === 'landing') {
+    <div class="background-image"></div>
+    <div class="glow-overlay"></div>
 
-  <!-- Contenido principal -->
-  <div class="content">
-    @if (view === 'landing') {
-      <div class="landing">
-        <div class="landing-left">
-          <h1 class="title">Clínica Pediátrica CUNINA</h1>
-          <p class="subtitle">Cuidamos la salud de tus hijos con amor y profesionalismo</p>
-        </div>
-        <div class="landing-right">
-          <button class="main-btn" (click)="showLogin()">Iniciar Sesión</button>
-          <button class="main-btn outline" (click)="showRegister()">Registrarse</button>
-        </div>
+    <div class="floating-icons">
+      <i class="fas fa-star float-1"></i>
+      <i class="fas fa-heart float-2"></i>
+      <i class="fas fa-baby-carriage float-3"></i>
+      <i class="fas fa-stethoscope float-4"></i>
+      <i class="fas fa-capsules float-5"></i>
+      <i class="fas fa-notes-medical float-6"></i>
+    </div>
+
+    <main class="content">
+      <div class="landing-container">
+        <header class="hero-section">
+          <div class="hero-brand">
+            <div class="logo-icon">
+              <i class="fas fa-child-reaching"></i>
+            </div>
+
+            <div>
+              <h1 class="title">
+                Clínica Pediátrica <span>CUNINA</span>
+              </h1>
+
+              <p class="subtitle">
+                En Ayacucho, cuidamos la salud y el desarrollo de tus hijos con el amor, la calidez y el profesionalismo que tu familia merece.
+              </p>
+            </div>
+          </div>
+
+          <div class="glass-panel auth-quick-card">
+            <h3>Portal de Atención</h3>
+
+            <div class="auth-actions">
+              <button
+                class="main-btn primary"
+                (click)="showLogin()">
+                <i class="fas fa-sign-in-alt"></i>
+                Iniciar Sesión
+              </button>
+
+              <button
+                class="main-btn outline"
+                (click)="showRegister()">
+                <i class="fas fa-user-plus"></i>
+                Registrarse
+              </button>
+            </div>
+
+            <div class="quick-links">
+              <button class="link-btn">
+                ¿Olvidaste tu contraseña?
+              </button>
+
+              <span>•</span>
+
+              <button class="link-btn">
+                Soporte
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <section class="landing-grid">
+          <article class="glass-panel grid-card">
+            <div class="card-header">
+              <span class="badge">Atención Médica</span>
+              <h2>Nuestros Especialistas</h2>
+            </div>
+
+            <div class="specialists-list">
+              @for (medico of medicos; track medico.idMedico) {
+                <div class="specialist-item">
+                  <div class="avatar">
+                    <img
+                      [src]="'https://ui-avatars.com/api/?name=' + (medico.usuario?.nombre || 'Doctor') + '+' + (medico.usuario?.apellido || '') + '&background=0072ff&color=fff'"
+                      alt="Doctor">
+                  </div>
+
+                  <div class="spec-info">
+                    <strong>
+                      Dr. {{ medico.usuario?.nombre }} {{ medico.usuario?.apellido }}
+                    </strong>
+
+                    <span>
+                      {{ medico.especialidad?.nombre }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          </article>
+
+          <article class="glass-panel grid-card">
+            <div class="card-header">
+              <span class="badge">Servicios</span>
+              <h2>Atención Destacada</h2>
+            </div>
+
+            <div class="services-list">
+              @for (especialidad of especialidades; track especialidad.idEspecialidad) {
+                <div class="service-item">
+                  <div class="service-icon">
+                    <i class="fas fa-stethoscope"></i>
+                  </div>
+
+                  <div class="service-text">
+                    <strong>
+                      {{ especialidad.nombre }}
+                    </strong>
+
+                    <p>
+                      {{ especialidad.descripcion }}
+                    </p>
+                  </div>
+                </div>
+              }
+            </div>
+          </article>
+
+          <article class="glass-panel grid-card">
+            <div class="card-header">
+              <span class="badge">Comunidad Ayacucho</span>
+              <h2>Nuestra Ubicación</h2>
+            </div>
+
+            <div class="map-container">
+              <iframe
+                src="https://www.google.com/maps?q=Cl%C3%ADnica%20Pedi%C3%A1trica%20CUNINA%2C%20Prolongaci%C3%B3n%20Libertad%201101%2C%20Ayacucho%2C%20Per%C3%BA&output=embed"
+                width="100%"
+                height="200"
+                style="border:0; border-radius: 12px;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+
+            <div class="contact-mini">
+              <p>
+                <i class="fas fa-map-marker-alt"></i>
+                Prolongación Libertad N° 1101, Ayacucho
+              </p>
+
+              <p>
+                <i class="fas fa-phone-alt"></i>
+                (066) 123-456
+              </p>
+            </div>
+          </article>
+        </section>
       </div>
-    } @else {
-      <div class="form-container">
-        @if (view === 'login') {
-          <div class="form-card">
-            <button class="back-btn" (click)="showLanding()">← Volver</button>
-            <h2>Iniciar Sesión</h2>
-            <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="form">
-              <div class="form-group">
-                <label>Correo electrónico</label>
-                <input type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+    </main>
+  } @else {
+    <div class="auth-modern">
+
+      <div class="medical-background">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <i class="fas fa-heartbeat medical-icon icon-1"></i>
+        <i class="fas fa-stethoscope medical-icon icon-2"></i>
+        <i class="fas fa-plus medical-icon icon-3"></i>
+        <i class="fas fa-heart medical-icon icon-4"></i>
+        <i class="fas fa-notes-medical medical-icon icon-5"></i>
+      </div>
+
+      <div class="auth-card">
+
+        <button
+          class="back-btn"
+          type="button"
+          (click)="showLanding()">
+          <i class="fas fa-arrow-left"></i>
+          Volver al inicio
+        </button>
+
+        <div class="doctor-section">
+
+          <div class="doctor-glow"></div>
+
+          <div class="doctor-heart">
+            <i class="fas fa-heart"></i>
+          </div>
+
+          <div
+            class="doctor-character"
+            [ngClass]="doctorAnimation">
+
+            <img
+              src="assets/images/doctor.png"
+              alt="Doctor CUNINA">
+
+            <div class="speech-bubble">
+              @if (doctorAnimation === 'doctor-typing') {
+                <span>¡Muy bien! ✨</span>
+              } @else if (doctorAnimation === 'doctor-password') {
+                <span>🙈 Tu contraseña es secreta</span>
+              } @else if (doctorAnimation === 'doctor-success') {
+                <span>¡Vamos! 💙</span>
+              } @else {
+                <span>¡Hola! 👋</span>
+              }
+            </div>
+          </div>
+
+          <div class="doctor-shadow"></div>
+
+        </div>
+
+        <div class="form-section">
+
+          <div class="brand-mini">
+            <div class="brand-icon">
+              <i class="fas fa-child-reaching"></i>
+            </div>
+
+            <div>
+              <span>CUNINA</span>
+              <small>Clínica Pediátrica</small>
+            </div>
+          </div>
+
+          @if (view === 'login') {
+
+            <div class="form-heading">
+              <span class="heading-badge">
+                <i class="fas fa-shield-heart"></i>
+                Portal seguro
+              </span>
+
+              <h2>¡Bienvenido de nuevo!</h2>
+
+              <p>
+                Ingresa tus credenciales para continuar
+              </p>
+            </div>
+
+            <form
+              [formGroup]="loginForm"
+              (ngSubmit)="onLogin()">
+
+              <div
+                class="form-group"
+                [ngClass]="{'input-active': activeField === 'email'}">
+
+                <label>
+                  <i class="fas fa-envelope"></i>
+                  Correo electrónico
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fas fa-at input-icon"></i>
+
+                  <input
+                    type="email"
+                    formControlName="email"
+                    placeholder="correo@ejemplo.com"
+                    autocomplete="email"
+                    (focus)="setActiveField('email')"
+                    (input)="onFieldTyping('email')"
+                    (blur)="clearActiveField()">
+
+                  @if (loginEmail?.valid) {
+                    <i class="fas fa-circle-check valid-icon"></i>
+                  }
+                </div>
+
                 @if (loginEmail?.invalid && loginEmail?.touched) {
-                  <small class="error-text">Ingrese un email válido</small>
+                  <small class="error-text">
+                    <i class="fas fa-circle-exclamation"></i>
+                    Ingrese un email válido
+                  </small>
                 }
               </div>
-              <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" formControlName="password" placeholder="********" />
+
+              <div
+                class="form-group"
+                [ngClass]="{'input-active': activeField === 'password'}">
+
+                <label>
+                  <i class="fas fa-lock"></i>
+                  Contraseña
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fas fa-key input-icon"></i>
+
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    formControlName="password"
+                    placeholder="Ingresa tu contraseña"
+                    autocomplete="current-password"
+                    (focus)="setActiveField('password')"
+                    (input)="onFieldTyping('password')"
+                    (blur)="clearActiveField()">
+
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    (click)="togglePassword()">
+
+                    <i
+                      class="fas"
+                      [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'">
+                    </i>
+                  </button>
+                </div>
+
                 @if (loginPassword?.invalid && loginPassword?.touched) {
-                  <small class="error-text">La contraseña es obligatoria</small>
+                  <small class="error-text">
+                    <i class="fas fa-circle-exclamation"></i>
+                    La contraseña es obligatoria
+                  </small>
                 }
               </div>
-              <button type="submit" class="submit-btn">Ingresar</button>
-              @if (mensaje) { <p class="mensaje-error">{{ mensaje }}</p> }
+
+              <div class="form-options">
+                <label class="remember-option">
+                  <input type="checkbox">
+                  <span></span>
+                  Recordarme
+                </label>
+
+                <button
+                  type="button"
+                  class="forgot-btn">
+                  ¿Olvidaste tu contraseña?
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                class="submit-btn"
+                (mouseenter)="doctorAnimation = 'doctor-success'">
+
+                <span>Ingresar</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+
+              @if (mensaje) {
+                <div class="message message-error">
+                  <i class="fas fa-circle-exclamation"></i>
+                  {{ mensaje }}
+                </div>
+              }
+
+              <div class="switch-auth">
+                <span>¿Todavía no tienes una cuenta?</span>
+
+                <button
+                  type="button"
+                  (click)="showRegister()">
+                  Crear cuenta
+                  <i class="fas fa-user-plus"></i>
+                </button>
+              </div>
+
             </form>
-          </div>
-        } @else if (view === 'register') {
-          <div class="form-card register-card">
-            <button class="back-btn" (click)="showLanding()">← Volver</button>
-            <h2>Registro de Tutor</h2>
-            <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="form">
+
+          } @else {
+
+            <div class="form-heading">
+              <span class="heading-badge">
+                <i class="fas fa-user-plus"></i>
+                Nuevo paciente
+              </span>
+
+              <h2>Crear cuenta</h2>
+
+              <p>
+                Regístrate como tutor en CUNINA
+              </p>
+            </div>
+
+            <form
+              [formGroup]="registerForm"
+              (ngSubmit)="onRegister()">
+
               <div class="form-row">
-                <div class="form-group">
-                  <label>Nombre</label>
-                  <input formControlName="nombre" placeholder="Nombre" />
+
+                <div
+                  class="form-group"
+                  [ngClass]="{'input-active': activeField === 'nombre'}">
+
+                  <label>
+                    <i class="fas fa-user"></i>
+                    Nombre
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+
+                    <input
+                      formControlName="nombre"
+                      placeholder="Tu nombre"
+                      autocomplete="given-name"
+                      (focus)="setActiveField('nombre')"
+                      (input)="onFieldTyping('nombre')"
+                      (blur)="clearActiveField()">
+                  </div>
+
                   @if (regNombre?.invalid && regNombre?.touched) {
-                    <small class="error-text">Obligatorio (mín. 2)</small>
+                    <small class="error-text">
+                      Obligatorio (mín. 2)
+                    </small>
                   }
                 </div>
-                <div class="form-group">
-                  <label>Apellido</label>
-                  <input formControlName="apellido" placeholder="Apellido" />
+
+                <div
+                  class="form-group"
+                  [ngClass]="{'input-active': activeField === 'apellido'}">
+
+                  <label>
+                    <i class="fas fa-user"></i>
+                    Apellido
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+
+                    <input
+                      formControlName="apellido"
+                      placeholder="Tu apellido"
+                      autocomplete="family-name"
+                      (focus)="setActiveField('apellido')"
+                      (input)="onFieldTyping('apellido')"
+                      (blur)="clearActiveField()">
+                  </div>
+
                   @if (regApellido?.invalid && regApellido?.touched) {
-                    <small class="error-text">Obligatorio (mín. 2)</small>
+                    <small class="error-text">
+                      Obligatorio (mín. 2)
+                    </small>
                   }
                 </div>
+
               </div>
 
               <div class="form-row">
-                <div class="form-group">
-                  <label>Email</label>
-                  <input type="email" formControlName="email" placeholder="correo@ejemplo.com" />
+
+                <div
+                  class="form-group"
+                  [ngClass]="{'input-active': activeField === 'email'}">
+
+                  <label>
+                    <i class="fas fa-envelope"></i>
+                    Email
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fas fa-at input-icon"></i>
+
+                    <input
+                      type="email"
+                      formControlName="email"
+                      placeholder="correo@ejemplo.com"
+                      autocomplete="email"
+                      (focus)="setActiveField('email')"
+                      (input)="onFieldTyping('email')"
+                      (blur)="clearActiveField()">
+                  </div>
+
                   @if (regEmail?.invalid && regEmail?.touched) {
-                    <small class="error-text">Email inválido</small>
+                    <small class="error-text">
+                      Email inválido
+                    </small>
                   }
                 </div>
-                <div class="form-group">
-                  <label>DNI</label>
-                  <input formControlName="dni" placeholder="8 dígitos" />
+
+                <div
+                  class="form-group"
+                  [ngClass]="{'input-active': activeField === 'dni'}">
+
+                  <label>
+                    <i class="fas fa-id-card"></i>
+                    DNI
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fas fa-address-card input-icon"></i>
+
+                    <input
+                      formControlName="dni"
+                      placeholder="8 dígitos"
+                      maxlength="8"
+                      inputmode="numeric"
+                      (focus)="setActiveField('dni')"
+                      (input)="onFieldTyping('dni')"
+                      (blur)="clearActiveField()">
+                  </div>
+
                   @if (regDni?.invalid && regDni?.touched) {
-                    <small class="error-text">Debe tener 8 dígitos</small>
+                    <small class="error-text">
+                      Debe tener 8 dígitos
+                    </small>
                   }
+
                   @if (erroresBackend['dni']) {
-                    <small class="error-text">{{ erroresBackend['dni'] }}</small>
+                    <small class="error-text">
+                      {{ erroresBackend['dni'] }}
+                    </small>
                   }
                 </div>
+
               </div>
 
               <div class="form-row">
-                <div class="form-group">
-                  <label>Contraseña</label>
-                  <input type="password" formControlName="password" placeholder="Mayúscula, minúscula, número y símbolo" />
+
+                <div
+                  class="form-group"
+                  [ngClass]="{'input-active': activeField === 'password'}">
+
+                  <label>
+                    <i class="fas fa-lock"></i>
+                    Contraseña
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fas fa-key input-icon"></i>
+
+                    <input
+                      [type]="showPassword ? 'text' : 'password'"
+                      formControlName="password"
+                      placeholder="Crea una contraseña"
+                      autocomplete="new-password"
+                      (focus)="setActiveField('password')"
+                      (input)="onFieldTyping('password')"
+                      (blur)="clearActiveField()">
+
+                    <button
+                      type="button"
+                      class="password-toggle"
+                      (click)="togglePassword()">
+
+                      <i
+                        class="fas"
+                        [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'">
+                      </i>
+                    </button>
+                  </div>
+
                   @if (regPassword?.invalid && regPassword?.touched) {
-                    <small class="error-text">Debe cumplir requisitos</small>
+                    <small class="error-text">
+                      Debe cumplir los requisitos
+                    </small>
                   }
+
                   @if (erroresBackend['password']) {
-                    <small class="error-text">{{ erroresBackend['password'] }}</small>
+                    <small class="error-text">
+                      {{ erroresBackend['password'] }}
+                    </small>
                   }
                 </div>
-                <div class="form-group">
-                  <label>Teléfono</label>
-                  <input formControlName="telefono" placeholder="Opcional" />
+
+                <div
+                  class="form-group"
+                  [ngClass]="{'input-active': activeField === 'telefono'}">
+
+                  <label>
+                    <i class="fas fa-phone"></i>
+                    Teléfono
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fas fa-mobile-screen input-icon"></i>
+
+                    <input
+                      formControlName="telefono"
+                      placeholder="Opcional"
+                      autocomplete="tel"
+                      (focus)="setActiveField('telefono')"
+                      (input)="onFieldTyping('telefono')"
+                      (blur)="clearActiveField()">
+                  </div>
+                </div>
+
+              </div>
+
+              <div
+                class="form-group"
+                [ngClass]="{'input-active': activeField === 'direccion'}">
+
+                <label>
+                  <i class="fas fa-location-dot"></i>
+                  Dirección
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fas fa-map-marker-alt input-icon"></i>
+
+                  <input
+                    formControlName="direccion"
+                    placeholder="Dirección de domicilio"
+                    autocomplete="street-address"
+                    (focus)="setActiveField('direccion')"
+                    (input)="onFieldTyping('direccion')"
+                    (blur)="clearActiveField()">
                 </div>
               </div>
 
-              <div class="form-group">
-                <label>Dirección</label>
-                <input formControlName="direccion" placeholder="Opcional" />
+              <button
+                type="submit"
+                class="submit-btn"
+                (mouseenter)="doctorAnimation = 'doctor-success'">
+
+                <span>Crear mi cuenta</span>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+
+              @if (mensaje) {
+                <div class="message message-success">
+                  <i class="fas fa-circle-check"></i>
+                  {{ mensaje }}
+                </div>
+              }
+
+              <div class="switch-auth">
+                <span>¿Ya tienes una cuenta?</span>
+
+                <button
+                  type="button"
+                  (click)="showLogin()">
+                  Iniciar sesión
+                  <i class="fas fa-right-to-bracket"></i>
+                </button>
               </div>
 
-              <button type="submit" class="submit-btn">Registrarse</button>
-              @if (mensaje) { <p class="mensaje-exito">{{ mensaje }}</p> }
             </form>
-          </div>
-        }
+          }
+
+        </div>
       </div>
-    }
-  </div>
+    </div>
+  }
 </div>

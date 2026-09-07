@@ -1,36 +1,79 @@
-<div class="form-container">
-  <h2>Registrar Paciente (Niño)</h2>
-  <form (ngSubmit)="registrar()">
-    <div class="form-group">
-      <label>Nombre</label>
-      <input [(ngModel)]="nombre" name="nombre" required />
+<div class="form-card-container">
+  <header class="section-header">
+    <h2><i class="fas fa-user-plus"></i> Registrar Paciente</h2>
+    <p class="section-subtitle">Completa la información del niño o niña</p>
+  </header>
+
+  <form (ngSubmit)="registrar()" class="modern-form">
+    <!-- Sección de imagen -->
+    <div class="image-upload-section">
+      <label class="image-upload-label">
+        @if (!imagenPreview) {
+          <div class="upload-placeholder">
+            <i class="fas fa-camera"></i>
+            <span>Subir foto del niño</span>
+          </div>
+        } @else {
+          <div class="image-preview">
+            <img [src]="imagenPreview" alt="Vista previa" />
+            <button type="button" class="remove-image" (click)="quitarImagen()">✕</button>
+          </div>
+        }
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="hidden-file-input"
+        />
+      </label>
     </div>
-    <div class="form-group">
-      <label>Apellido</label>
-      <input [(ngModel)]="apellido" name="apellido" required />
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input [(ngModel)]="nombre" name="nombre" required />
+      </div>
+      <div class="form-group">
+        <label>Apellido</label>
+        <input [(ngModel)]="apellido" name="apellido" required />
+      </div>
     </div>
-    <div class="form-group">
-      <label>Fecha de nacimiento</label>
-      <input type="date" [(ngModel)]="fechaNacimiento" name="fechaNacimiento" required />
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>DNI</label>
+        <input [(ngModel)]="dni" name="dni" placeholder="8 dígitos" maxlength="8" required />
+      </div>
+      <div class="form-group">
+        <label>Fecha de nacimiento</label>
+        <input type="date" [(ngModel)]="fechaNacimiento" name="fechaNacimiento" required />
+      </div>
     </div>
-    <div class="form-group">
-      <label>Género</label>
-      <select [(ngModel)]="genero" name="genero">
-        <option value="M">Masculino</option>
-        <option value="F">Femenino</option>
-      </select>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Género</label>
+        <select [(ngModel)]="genero" name="genero" required>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Grupo sanguíneo</label>
+        <input [(ngModel)]="grupoSanguineo" name="grupoSanguineo" placeholder="Opcional" />
+      </div>
     </div>
-    <div class="form-group">
-      <label>Grupo sanguíneo</label>
-      <input [(ngModel)]="grupoSanguineo" name="grupoSanguineo" />
-    </div>
+
     <div class="form-group">
       <label>Alergias</label>
-      <textarea [(ngModel)]="alergias" name="alergias"></textarea>
+      <textarea [(ngModel)]="alergias" name="alergias" placeholder="Opcional"></textarea>
     </div>
-    <button type="submit">Guardar</button>
-    @if (mensaje) {
-      <p class="mensaje">{{ mensaje }}</p>
-    }
+
+    <button type="submit" class="submit-btn">
+      <i class="fas fa-save"></i> Guardar Paciente
+    </button>
+
+    @if (mensaje) { <p class="mensaje-exito"><i class="fas fa-check-circle"></i> {{ mensaje }}</p> }
+    @if (error) { <p class="mensaje-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</p> }
   </form>
 </div>

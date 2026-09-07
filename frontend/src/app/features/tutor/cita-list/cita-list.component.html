@@ -1,26 +1,39 @@
-<div class="citas-container">
-  <h2>Mis Citas</h2>
+<div class="section-container">
+  <header class="section-header">
+    <h2><i class="fas fa-calendar-alt"></i> Mis Citas</h2>
+  </header>
 
-  @if (error) { <p class="error">{{ error }}</p> }
   @if (citas.length === 0 && !error) {
     <div class="empty-state">
-      <p>No hay citas registradas.</p>
+      <i class="fas fa-calendar-times"></i>
+      <h3>No hay citas registradas</h3>
+      <p>Reserva tu primera cita médica</p>
+      <button class="btn-primary" routerLink="/tutor/citas/nueva">
+        <i class="fas fa-plus-circle"></i> Reservar Cita
+      </button>
     </div>
-  }
-
-  @if (citas.length > 0) {
+  } @else {
     <div class="table-responsive">
-      <table>
+      <table class="modern-table">
         <thead>
-          <tr><th>Paciente</th><th>Fecha</th><th>Especialidad</th><th>Estado</th></tr>
+          <tr>
+            <th>#</th>
+            <th>Paciente</th>
+            <th>Fecha</th>
+            <th>Especialidad</th>
+            <th>Estado</th>
+          </tr>
         </thead>
         <tbody>
-          @for (c of citas; track c.idCita) {
+          @for (c of citas; track c.idCita; let i = $index) {
             <tr>
+              <td>{{ i + 1 }}</td>
               <td>{{ c.paciente.nombre }} {{ c.paciente.apellido }}</td>
               <td>{{ c.fechaHora | date:'medium' }}</td>
               <td>{{ c.especialidad.nombre }}</td>
-              <td><span class="estado estado-{{ c.estado | lowercase }}">{{ c.estado }}</span></td>
+              <td>
+                <span class="estado-badge" [ngClass]="c.estado.toLowerCase()">{{ c.estado }}</span>
+              </td>
             </tr>
           }
         </tbody>

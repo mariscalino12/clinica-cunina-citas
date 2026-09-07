@@ -1,6 +1,8 @@
 <div class="triaje-container">
-  <h2>Triaje de Síntomas</h2>
-  <p class="intro">Seleccione el paciente y los síntomas para obtener una recomendación de especialidad.</p>
+  <header class="section-header">
+    <h2><i class="fas fa-notes-medical"></i> Triaje de Síntomas</h2>
+    <p class="section-subtitle">Selecciona un paciente y los síntomas para obtener una recomendación</p>
+  </header>
 
   <div class="form-group">
     <label>Paciente</label>
@@ -13,10 +15,10 @@
   </div>
 
   <div class="sintomas">
-    <p class="subtitulo">Seleccione los síntomas:</p>
+    <p class="sintomas-title">Síntomas</p>
     <div class="checkbox-grid">
       @for (s of sintomasDisponibles; track s.id) {
-        <label class="checkbox-item">
+        <label class="checkbox-card">
           <input type="checkbox" (change)="toggleSintoma(s.id)" />
           <span>{{ s.nombre }}</span>
         </label>
@@ -24,13 +26,14 @@
     </div>
   </div>
 
-  <button class="btn-primario" (click)="realizarTriaje()">Obtener recomendación</button>
+  <button class="submit-btn" (click)="realizarTriaje()">
+    <i class="fas fa-stethoscope"></i> Obtener recomendación
+  </button>
 
-  @if (error) { <p class="error">{{ error }}</p> }
-
+  @if (error) { <p class="mensaje-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</p> }
   @if (resultado) {
-    <div class="resultado">
-      <h3>Especialidad recomendada:</h3>
+    <div class="resultado-card">
+      <h3><i class="fas fa-check-circle"></i> Especialidad recomendada</h3>
       <p class="especialidad">{{ resultado.especialidadRecomendada.nombre }}</p>
     </div>
   }

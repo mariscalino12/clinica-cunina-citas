@@ -1,15 +1,802 @@
-<div class="dashboard">
+<div class="tutor-dashboard">
+
   <aside class="sidebar">
-    <h2>Panel Tutor</h2>
-    <nav class="menu">
-      <a routerLink="/tutor/pacientes" routerLinkActive="active">Mis Pacientes</a>
-      <a routerLink="/tutor/pacientes/nuevo" routerLinkActive="active">Registrar Paciente</a>
-      <a routerLink="/tutor/triaje" routerLinkActive="active">Triaje</a>
-      <a routerLink="/tutor/citas" routerLinkActive="active">Citas</a>
-      <a routerLink="/tutor/citas/nueva" routerLinkActive="active">Reservar Cita</a>
-    </nav>
+
+    <div class="sidebar-top">
+
+      <div class="brand">
+
+        <div class="brand-logo">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ7yi0PQtX29qQP4Q2oKVlIt1fKnuF9McIBs2apKKAtyjqGpdDaRybzse9&s=10"
+            alt="Logo CUNINA"
+          >
+        </div>
+
+        <div class="brand-text">
+          <strong>CUNINA</strong>
+          <span>Clínica Pediátrica</span>
+        </div>
+
+      </div>
+
+      <div class="profile-mini">
+
+        <button
+          type="button"
+          class="profile-avatar profile-avatar-button"
+          (click)="abrirPerfil()"
+          aria-label="Editar perfil"
+        >
+
+          @if (fotoPerfil) {
+
+            <img
+              [src]="fotoPerfil"
+              alt="Foto de perfil"
+              class="profile-photo"
+            >
+
+          } @else {
+
+            <i class="fas fa-user"></i>
+
+          }
+
+        </button>
+
+        <div class="profile-info">
+          <strong>{{ nombreUsuario }}</strong>
+          <span>Tutor</span>
+        </div>
+
+        <button
+          type="button"
+          class="profile-edit-button"
+          (click)="abrirPerfil()"
+          aria-label="Editar perfil"
+        >
+          <i class="fas fa-pen"></i>
+        </button>
+
+        <span class="online-dot"></span>
+
+      </div>
+
+      <div class="menu-title">
+        MENÚ PRINCIPAL
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <a
+          href="javascript:void(0)"
+          class="nav-link"
+          [class.active]="estaEnInicio()"
+          (click)="irInicio()"
+        >
+
+          <span class="nav-icon">
+            <i class="fas fa-house"></i>
+          </span>
+
+          <span class="nav-text">
+            Inicio
+          </span>
+
+          <span class="nav-active-dot"></span>
+
+        </a>
+
+        <a
+          routerLink="/tutor/pacientes"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link"
+        >
+
+          <span class="nav-icon">
+            <i class="fas fa-users"></i>
+          </span>
+
+          <span class="nav-text">
+            Mis Pacientes
+          </span>
+
+          <span class="nav-active-dot"></span>
+
+        </a>
+
+        <a
+          routerLink="/tutor/pacientes/nuevo"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+
+          <span class="nav-icon">
+            <i class="fas fa-user-plus"></i>
+          </span>
+
+          <span class="nav-text">
+            Registrar Paciente
+          </span>
+
+          <span class="nav-active-dot"></span>
+
+        </a>
+
+        <a
+          routerLink="/tutor/triaje"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link"
+        >
+
+          <span class="nav-icon">
+            <i class="fas fa-heart-pulse"></i>
+          </span>
+
+          <span class="nav-text">
+            Triaje
+          </span>
+
+          <span class="nav-active-dot"></span>
+
+        </a>
+
+        <a
+          routerLink="/tutor/citas"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link"
+        >
+
+          <span class="nav-icon">
+            <i class="fas fa-calendar-check"></i>
+          </span>
+
+          <span class="nav-text">
+            Mis Citas
+          </span>
+
+          <span class="nav-active-dot"></span>
+
+        </a>
+
+        <a
+          routerLink="/tutor/citas/nueva"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+
+          <span class="nav-icon">
+            <i class="fas fa-calendar-plus"></i>
+          </span>
+
+          <span class="nav-text">
+            Reservar Cita
+          </span>
+
+          <span class="nav-active-dot"></span>
+
+        </a>
+
+      </nav>
+
+    </div>
+
+    <div class="sidebar-bottom">
+
+      <button
+        type="button"
+        class="logout-btn"
+        (click)="cerrarSesion()"
+      >
+
+        <span class="logout-icon">
+          <i class="fas fa-right-from-bracket"></i>
+        </span>
+
+        <span class="logout-text">
+          Cerrar sesión
+        </span>
+
+      </button>
+
+      <div class="sidebar-footer">
+        <span>© CUNINA</span>
+        <span>Ayacucho</span>
+      </div>
+
+    </div>
+
   </aside>
-  <main class="content">
-    <router-outlet></router-outlet>
+
+  <main class="main-content">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <div class="mobile-brand">
+
+          <div class="mobile-brand-icon">
+
+            <img
+              src="assets/images/logo-cunina.png"
+              alt="CUNINA"
+            >
+
+          </div>
+
+          <strong>
+            CUNINA
+          </strong>
+
+        </div>
+
+        <div class="page-indicator">
+
+          <span class="pulse"></span>
+
+          Portal del Tutor
+
+        </div>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <button
+          type="button"
+          class="notification"
+          aria-label="Notificaciones"
+        >
+
+          <i class="far fa-bell"></i>
+
+          <span class="notification-dot"></span>
+
+        </button>
+
+        <button
+          type="button"
+          class="topbar-profile"
+          (click)="abrirPerfil()"
+        >
+
+          <div class="topbar-avatar">
+
+            @if (fotoPerfil) {
+
+              <img
+                [src]="fotoPerfil"
+                alt="Foto de perfil"
+                class="topbar-profile-photo"
+              >
+
+            } @else {
+
+              <i class="fas fa-user"></i>
+
+            }
+
+          </div>
+
+          <div class="topbar-user">
+
+            <strong>
+              {{ nombreUsuario }}
+            </strong>
+
+            <span>
+              Tutor
+            </span>
+
+          </div>
+
+          <i class="fas fa-chevron-down arrow"></i>
+
+        </button>
+
+      </div>
+
+    </header>
+
+    @if (estaEnInicio()) {
+
+      <section class="home-panel">
+
+        <div class="home-hero">
+
+          <div class="home-content">
+
+            <div class="welcome-badge">
+
+              <i class="fas fa-sparkles"></i>
+
+              Bienvenido al portal familiar
+
+            </div>
+
+            <h1>
+              Hola,
+              <span>
+                {{ nombreUsuario }}
+              </span>
+            </h1>
+
+            <p>
+              Gestiona la atención médica de tus pequeños
+              de forma rápida, sencilla y segura.
+            </p>
+
+            <div class="home-actions">
+
+              <a
+                routerLink="/tutor/citas/nueva"
+                class="primary-action"
+              >
+
+                <i class="fas fa-calendar-plus"></i>
+
+                Reservar una cita
+
+                <i class="fas fa-arrow-right arrow-icon"></i>
+
+              </a>
+
+              <a
+                routerLink="/tutor/pacientes/nuevo"
+                class="secondary-action"
+              >
+
+                <i class="fas fa-user-plus"></i>
+
+                Registrar paciente
+
+              </a>
+
+            </div>
+
+          </div>
+
+          <div class="home-decoration">
+
+            <div class="hero-circle hero-circle-one"></div>
+
+            <div class="hero-circle hero-circle-two"></div>
+
+            <div class="doctor-container">
+
+              <div class="doctor-aura"></div>
+
+              <img
+                src="assets/images/doctor.png"
+                alt="Doctor CUNINA"
+                class="doctor-image"
+              >
+
+              <div class="doctor-bubble">
+
+                <i class="fas fa-heart"></i>
+
+                ¡Cuidamos lo que más amas!
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="section-header">
+
+          <div>
+
+            <span class="section-kicker">
+              ACCESOS RÁPIDOS
+            </span>
+
+            <h2>
+              ¿Qué deseas hacer?
+            </h2>
+
+          </div>
+
+          <span class="section-note">
+            Todo lo que necesitas en un solo lugar
+          </span>
+
+        </div>
+
+        <div class="quick-grid">
+
+          <a
+            routerLink="/tutor/pacientes"
+            class="quick-card blue"
+          >
+
+            <div class="quick-top">
+
+              <div class="quick-icon">
+                <i class="fas fa-users"></i>
+              </div>
+
+              <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+            </div>
+
+            <div class="quick-content">
+
+              <h3>
+                Mis Pacientes
+              </h3>
+
+              <p>
+                Consulta y administra la información de tus pacientes.
+              </p>
+
+            </div>
+
+            <div class="quick-footer">
+
+              <span>
+                Ver pacientes
+              </span>
+
+              <i class="fas fa-arrow-right"></i>
+
+            </div>
+
+          </a>
+
+          <a
+            routerLink="/tutor/pacientes/nuevo"
+            class="quick-card cyan"
+          >
+
+            <div class="quick-top">
+
+              <div class="quick-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+
+              <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+            </div>
+
+            <div class="quick-content">
+
+              <h3>
+                Nuevo Paciente
+              </h3>
+
+              <p>
+                Registra a un niño para gestionar su atención médica.
+              </p>
+
+            </div>
+
+            <div class="quick-footer">
+
+              <span>
+                Registrar ahora
+              </span>
+
+              <i class="fas fa-arrow-right"></i>
+
+            </div>
+
+          </a>
+
+          <a
+            routerLink="/tutor/triaje"
+            class="quick-card rose"
+          >
+
+            <div class="quick-top">
+
+              <div class="quick-icon">
+                <i class="fas fa-heart-pulse"></i>
+              </div>
+
+              <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+            </div>
+
+            <div class="quick-content">
+
+              <h3>
+                Triaje
+              </h3>
+
+              <p>
+                Registra y consulta los datos de evaluación inicial.
+              </p>
+
+            </div>
+
+            <div class="quick-footer">
+
+              <span>
+                Ir a triaje
+              </span>
+
+              <i class="fas fa-arrow-right"></i>
+
+            </div>
+
+          </a>
+
+          <a
+            routerLink="/tutor/citas"
+            class="quick-card gold"
+          >
+
+            <div class="quick-top">
+
+              <div class="quick-icon">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+
+              <i class="fas fa-arrow-up-right-from-square card-arrow"></i>
+
+            </div>
+
+            <div class="quick-content">
+
+              <h3>
+                Mis Citas
+              </h3>
+
+              <p>
+                Consulta tus citas médicas y revisa su estado.
+              </p>
+
+            </div>
+
+            <div class="quick-footer">
+
+              <span>
+                Consultar citas
+              </span>
+
+              <i class="fas fa-arrow-right"></i>
+
+            </div>
+
+          </a>
+
+        </div>
+
+        <div class="bottom-grid">
+
+          <div class="info-panel">
+
+            <div class="panel-header">
+
+              <div class="panel-icon">
+                <i class="fas fa-calendar-day"></i>
+              </div>
+
+              <div>
+
+                <span>
+                  ATENCIÓN MÉDICA
+                </span>
+
+                <h3>
+                  Reserva tu próxima cita
+                </h3>
+
+              </div>
+
+            </div>
+
+            <p>
+              Agenda la atención de tus pequeños con nuestros especialistas
+              de la Clínica Pediátrica CUNINA.
+            </p>
+
+            <a
+              routerLink="/tutor/citas/nueva"
+              class="panel-button"
+            >
+
+              Reservar cita
+
+              <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+          </div>
+
+          <div class="info-panel security-panel">
+
+            <div class="security-icon">
+              <i class="fas fa-shield-heart"></i>
+            </div>
+
+            <div class="security-info">
+
+              <span>
+                SEGURIDAD
+              </span>
+
+              <h3>
+                Tu información está protegida
+              </h3>
+
+            </div>
+
+            <p>
+              CUNINA protege los datos personales y médicos utilizados
+              dentro del portal del tutor.
+            </p>
+
+            <div class="security-status">
+
+              <span></span>
+
+              Sistema operativo
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    } @else {
+
+      <section class="router-container">
+        <router-outlet></router-outlet>
+      </section>
+
+    }
+
   </main>
+
+  @if (mostrarPerfil) {
+
+    <div
+      class="profile-modal-backdrop"
+      (click)="cerrarPerfil()"
+    >
+
+      <div
+        class="profile-modal"
+        (click)="$event.stopPropagation()"
+      >
+
+        <div class="profile-modal-header">
+
+          <div>
+
+            <span class="profile-modal-kicker">
+              CUENTA DEL TUTOR
+            </span>
+
+            <h2>
+              Editar perfil
+            </h2>
+
+            <p>
+              Personaliza la imagen que aparecerá en tu portal.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            class="profile-close"
+            (click)="cerrarPerfil()"
+            aria-label="Cerrar"
+          >
+
+            <i class="fas fa-xmark"></i>
+
+          </button>
+
+        </div>
+
+        <div class="profile-modal-body">
+
+          <div class="profile-preview">
+
+            <div class="profile-preview-avatar">
+
+              @if (fotoPerfil) {
+
+                <img
+                  [src]="fotoPerfil"
+                  alt="Foto de perfil"
+                  class="profile-preview-photo"
+                >
+
+              } @else {
+
+                <i class="fas fa-user"></i>
+
+              }
+
+            </div>
+
+            <div class="profile-preview-info">
+
+              <strong>
+                {{ nombreUsuario }}
+              </strong>
+
+              <span>
+                Tutor
+              </span>
+
+            </div>
+
+          </div>
+
+          <div class="upload-photo-section">
+
+            <input
+              #fotoInput
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              class="photo-input"
+              (change)="onFileSelected($event)"
+            >
+
+            <button
+              type="button"
+              class="upload-btn"
+              (click)="fotoInput.click()"
+            >
+
+              <i class="fas fa-camera"></i>
+
+              {{ fotoPerfil ? 'Cambiar foto' : 'Subir foto' }}
+
+            </button>
+
+            <span class="upload-hint">
+              JPG, PNG o WEBP · Máximo 2 MB
+            </span>
+
+          </div>
+
+          <div class="profile-actions">
+
+            <button
+              type="button"
+              class="profile-cancel"
+              (click)="cerrarPerfil()"
+            >
+              Cerrar
+            </button>
+
+            <button
+              type="button"
+              class="profile-save"
+              (click)="cerrarPerfil()"
+            >
+
+              <i class="fas fa-check"></i>
+
+              Guardar cambios
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
 </div>

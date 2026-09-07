@@ -1,3 +1,4 @@
+@use 'sass:color';
 .register-container {
   display: flex;
   justify-content: center;
@@ -60,7 +61,7 @@ button {
   font-weight: 500;
   transition: background-color 0.3s;
   &:hover {
-    background-color: darken(#FF6B6B, 8%);
+    background-color: color.adjust(#FF6B6B, $lightness: -8%);
   }
 }
 
